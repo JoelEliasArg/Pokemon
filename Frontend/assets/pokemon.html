@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gestión de Pokémon</title>
+
+  <!-- Fuente -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;800&display=swap" rel="stylesheet">
+
+  <!-- CSS: asegúrate que este archivo exista en assets/css/pokemon.css -->
+  <link rel="stylesheet" href="css/pokemon.css">
+</head>
+<body>
+
+  <main class="contenedor">
+
+    <!-- panel derecho: form + listado -->
+    <div class="panel-derecho fade-in delay-2">
+      <div class="formulario">
+        <img src="images/logo.png" alt="logo" class="logo-form">
+        <h3 class="titulo-formulario">Registrar Pokémon</h3>
+       <form id="registrarPokemon">
+          <input id="nombre" type="text" placeholder="Nombre" required>
+          <input id="tipo" type="text" placeholder="Tipo" required>
+          <input id="nivel" type="number" placeholder="Nivel" required>
+          <button type="submit" class="btn-registrar">Registrar Pokémon</button>
+        </form>
+      </div>
+      <div class="listado fade-in delay-3" id="listarPokemonContainer">
+  <img src="../assets/images/pikachu.png" alt="pikachu-listado" class="pikachu-listado">
+  <button id="btnListarPokemon" class="btn-listar">Listar Pokemones</button>
+        <table id="tablaPokemon">
+            <thead>
+                <tr><th>Nombre</th><th>Tipo</th><th>Nivel</th></tr>
+            </thead>
+        <tbody></tbody>
+        </table>
+      </div>
+
+  </main>
+
+  <script src="js/pokemon.js"></script>
+  <div class="pokeball-corner"></div>
+</body>
+</html>

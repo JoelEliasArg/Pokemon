@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestión de Usuarios</title>
+
+  <!-- Fuente Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/usuarios.css" />
+</head>
+<body class="outfit-regular">
+
+  <main class="contenedor fade-in">
+    <!-- Sección izquierda: perfil -->
+ <section class="perfil fade-in delay-1">
+  <div class="perfil-viewer">
+    <img id="perfilActivo" src="images/profile_1.png" alt="Entrenador actual" class="foto-perfil">
+  </div>
+
+  <div class="controles-perfil">
+    <button id="prevPerfil" class="btn-flecha">⬅</button>
+    <button id="nextPerfil" class="btn-flecha">➡</button>
+  </div>
+</section>
+
+
+    <!-- Sección derecha completa: formulario + lista -->
+    <section class="panel-derecho fade-in delay-3">
+    <div class="formulario">
+        <img src="images/logo.png" alt="Logo Pokémon" class="logo-form">
+        <h3 class="titulo-formulario">Registrar Usuario</h3>
+        <form id="registrarUsuario">
+             <input type="text" id="cedula" placeholder="Cédula" required>
+            <input type="text" id="nombre" placeholder="Nombre" required>
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="number" id="edad" placeholder="Edad" required>
+            <button type="submit" class="btn-registrar">Registrar</button>
+        </form>
+    </div>
+
+
+      <!-- Columna derecha: listar usuarios -->
+      <div class="listado">
+        <button id="btnListarUsuarios" class="btn-listar">Listar Usuarios</button>
+        <table id="tablaUsuarios">
+          <thead>
+            <tr>
+              <th>Cédula</th>
+              <th>Nombre</th>
+              <th>Email</th>
+              <th>Edad</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <div class="pokeball-corner"></div>
+  <script src="js/usuarios.js"></script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registro de Capturas</title>
+  <link rel="stylesheet" href="/Frontend/assets/css/capturas.css" />
+    <!-- Fuente Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/capturas.css" />
+</head>
+</head>
+<body>
+  <div class="contenedor">
+
+    <div class="panel-derecho fade-in delay-2">
+      <div class="formulario">
+        <img src="images/logo.png" alt="Logo Pokémon" class="logo-form" />
+        <h2 class="titulo-formulario">Registrar Captura</h2>
+        <form id="registrarCaptura">
+          <input type="text" id="usuarioCedula" placeholder="Cédula del Usuario" required />
+          <input type="text" id="pokemonId" placeholder="ID del Pokémon" required />
+          <button type="submit" class="btn-registrar">Registrar Captura</button>
+        </form>
+      </div>
+
+      <div class="listado fade-in delay-3">
+        <div><img src="../assets/images/magikarp.png" alt="magikarp-listado" class="magikarp-listado"></div>
+        <button id="btnListarCapturas" class="btn-listar">Listar Capturas</button>
+        <table id="tablaCapturas">
+          <thead>
+            <tr>
+              <th>Cédula Usuario</th>
+              <th>ID Pokémon</th>
+              <th>Fecha</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="pokeball-corner"></div>
+  <script src="js/capturas.js"></script>
+</body>
+</html>

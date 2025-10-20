@@ -1,0 +1,302 @@
+/* Fuente principal Outfit */
+.outfit-regular {
+  font-family: "Outfit", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* ----- BODY ----- */
+body {
+  background: linear-gradient(to bottom right, #4DD5FF, #0515a8);
+  min-height: 100vh;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* === CARDS PRINCIPALES (ahora con degradado naranja) === */
+.custom-card img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+}
+
+.custom-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+.custom-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.card-img-top {
+  height: 220px;
+  object-fit: cover;
+  border-bottom: 3px solid rgba(0, 0, 0, 0.1);
+}
+
+/* ----- TEXTOS ----- */
+h1 {
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.card-title {
+  font-weight: 600;
+  font-size: 1.9rem;
+  color: #f8f400;
+  border-width: 1.2rem;
+  text-shadow: #fffb00;
+}
+
+.card-text {
+  font-size: 1.4rem;
+  color: #faea8f;
+}
+
+/* ----- RESPONSIVE ----- */
+@media (max-width: 768px) {
+  .card-img-top {
+    height: 180px;
+  }
+  .card-title {
+    font-size: 1.2rem;
+  }
+  .card-text {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 576px) {
+  h1 {
+    font-size: 1.8rem;
+  }
+  .card-img-top {
+    height: 160px;
+  }
+  .card {
+    margin-bottom: 20px;
+  }
+}
+/* === Animación zoom-in en las cards === */
+.card {
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  cursor: pointer;
+}
+
+.card:hover {
+  transform: scale(1.07); /* Zoom in (acercamiento) */
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
+  z-index: 5; /* Para que no se corte si está cerca de otras cards */
+}
+.card:hover {
+  animation: zoomIn 0.4s ease forwards;
+}
+
+@keyframes zoomIn {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.07);
+  }
+}
+.card {
+  border-radius: 15px;
+  overflow: hidden;
+}
+.cards-container {
+  overflow: visible; /* Permite que la animación no se recorte */
+  position: relative;
+  z-index: 1;
+}
+.card {
+  transition: transform 0.35s ease-out, box-shadow 0.35s ease-out;
+  cursor: pointer;
+  border-radius: 15px;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+.card:hover {
+  transform: scale(1.07);
+  box-shadow: 0 18px 30px rgba(0, 0, 0, 0.25);
+  z-index: 10; /* Asegura que esté por encima de otras cards */
+}
+.card {
+  margin: 15px;
+}
+.cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 25px; /* Espacio entre cards */
+  padding: 20px;
+}
+.custom-card img {
+  width: 100%;
+  aspect-ratio: 16 / 9;   /* mantiene la proporción antes de que cargue */
+  object-fit: cover;       /* recorta sin deformar */
+  object-position: center; /* centra la parte visible */
+  display: block;
+  transition: transform 0.4s ease;
+}
+/* === Logo principal === */
+.pokemon-logo {
+  width: 250px;         /* tamaño base del logo */
+  height: auto;
+  display: block;
+  margin: 0 auto;       /* centra horizontalmente */
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3)); /* sombra elegante */
+  transition: transform 0.35s ease;
+}
+
+.pokemon-logo:hover {
+  transform: scale(1.08);
+}
+.card-link{
+
+  text-decoration: none;
+  text-decoration-line: none;
+}
+/* === Responsive === */
+@media (max-width: 768px) {
+  .pokemon-logo {
+    width: 180px;
+  }
+}
+.custom-card img {
+  opacity: 0;
+  transition: opacity 0.5s ease, transform 0.4s ease;
+}
+
+.custom-card img.loaded {
+  opacity: 1;
+}
+/* --- Animación de aparición suave --- */
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInMove 0.8s ease forwards;
+}
+
+@keyframes fadeInMove {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Asegura que las imágenes cargadas se vean correctamente */
+.custom-card img.loaded {
+  opacity: 1;
+  transition: opacity 0.4s ease-in;
+}
+
+.custom-card img {
+  opacity: 0;
+  transition: opacity 0.4s ease-in;
+}
+/* --- CARD GENERAL --- */
+.custom-card {
+  background: linear-gradient(180deg, #ff4e4e, #ee0101); /* degradado rojo uniforme */
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  color: white;
+}
+
+/* --- EFECTO HOVER --- */
+.custom-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* --- TEXTO INTERNO --- */
+.custom-card .card-title {
+  font-weight: 700;
+  color: #fff;
+}
+
+.custom-card .card-text {
+  font-weight: 400;
+  color: #fdff8e;
+  opacity: 0.9;
+}
+
+/* --- IMÁGENES --- */
+.custom-card img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  background-color: transparent;
+  transition: opacity 0.4s ease-in;
+}
+
+.custom-card img.loaded {
+  opacity: 1;
+}
+
+.custom-card img:not(.loaded) {
+  opacity: 0;
+}
+/* --- FONDO CON POKEBALL SEMITRANSPARENTE --- */
+body {
+  position: relative;
+  background: linear-gradient(135deg, #00b4ff, #003eb1); /* degradado azul elegante */
+  overflow-x: hidden;
+}
+
+/* Pseudo-elemento para la pokeball */
+body::before {
+  content: "";
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 600px; /* tamaño de la pokeball */
+  height: 600px;
+  background: url("../images/pokeball.png") no-repeat center;
+  background-size: contain;
+  opacity: 0.12; /* nivel de transparencia */
+  transform: translate(-50%, -50%);
+  pointer-events: none; /* no bloquea clics */
+  z-index: 0; /* detrás del contenido */
+}
+/* --- POKEBALLS DECORATIVAS EN LOS EXTREMOS --- */
+body::after {
+  content: "";
+  position: fixed;
+  top: -80px; /* esquina superior izquierda */
+  left: -80px;
+  width: 250px;
+  height: 250px;
+  background: url("../images/pokeball.png") no-repeat center;
+  background-size: contain;
+  opacity: 0.08;
+  transform: rotate(-20deg);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Pokeball decorativa inferior derecha */
+body .pokeball-corner {
+  content: "";
+  position: fixed;
+  bottom: -80px;
+  right: -80px;
+  width: 250px;
+  height: 250px;
+  background: url("../images/pokeball.png") no-repeat center;
+  background-size: contain;
+  opacity: 0.08;
+  transform: rotate(20deg);
+  pointer-events: none;
+  z-index: 0;
+}
