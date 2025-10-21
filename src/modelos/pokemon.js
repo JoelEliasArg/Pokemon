@@ -13,13 +13,18 @@ const definePokemon = (sequelize, DataTypes) => {
         tipo: {
             type: DataTypes.STRING,
             allowNull: false
-        },        
-        poder: {
-            type: DataTypes.STRING,
-            allowNull: false
+        },
+        
+        nivel: {
+            type: DataTypes.INTEGER, 
+            allowNull: false,
+            validate: {
+                min: 1 
+            }
         }
     }, {
         tableName: 'pokemon',
+        // Esto automáticamente agrega los campos createdAt y updatedAt
         timestamps: true
     });
 };

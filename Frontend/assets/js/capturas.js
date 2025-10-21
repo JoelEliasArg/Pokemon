@@ -1,103 +1,128 @@
+// Archivo: js/capturas.js (VERSIÓN FINAL CORREGIDA)
+
 document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("registrarCaptura");
-  const tbody = document.querySelector("#tablaCapturas tbody");
-  const btnListar = document.getElementById("btnListarCapturas");
+    const formCaptura = document.getElementById("registrarCaptura");
+    const tbody = document.querySelector("#tablaCapturas tbody");
+    const btnListar = document.getElementById("btnListarCapturas");
+    const API_BASE_URL = "http://localhost:3000";
 
-  // === ANIMACIONES FADE IN ===
-  const elementos = document.querySelectorAll(".fade-in");
-  elementos.forEach(el => el.classList.add("visible"));
+    // Función para mostrar mensajes visuales (Implementación completa)
+    function mostrarPopup(mensaje, tipo) {
+        const popupExistente = document.querySelector(".popup-mensaje");
+        if (popupExistente) popupExistente.remove();
 
-  // === REGISTRAR CAPTURA ===
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const captura = {
-      usuarioCedula: document.getElementById("usuarioCedula").value.trim(),
-      pokemonId: document.getElementById("pokemonId").value.trim(),
-    };
-
-    if (!captura.usuarioCedula || !captura.pokemonId) {
-      mostrarPopup("⚠️ Completa todos los campos.", "error");
-      return;
-    }
-
-    try {
-      const response = await fetch("http://localhost:3000/api/capturas/registrar", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(captura),
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        mostrarPopup(data.message || "✅ Captura registrada exitosamente.", "success");
-        form.reset();
-      } else {
-        mostrarPopup(data.message || "❌ Error al registrar la captura.", "error");
-      }
-    } catch {
-      mostrarPopup("🚫 Error de conexión con el servidor.", "error");
-    }
-  });
-
-  // === LISTAR CAPTURAS (solo al hacer clic) ===
-  btnListar.addEventListener("click", listarCapturas);
-
-  async function listarCapturas() {
-    try {
-      const response = await fetch("http://localhost:3000/api/capturas/listar");
-      const data = await response.json();
-
-      tbody.innerHTML = "";
-      data.resultado.forEach((c) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${c.usuarioCedula}</td>
-          <td>${c.pokemonId}</td>
-          <td>${new Date(c.createdAt).toLocaleDateString()}</td>
+        const popup = document.createElement("div");
+        popup.className = `popup-mensaje ${tipo}`;
+        popup.innerHTML = `
+            <div class="popup-contenido">
+                <p>${mensaje}</p>
+                <button id="cerrarPopup">OK</button>
+            </div>
         `;
-        tbody.appendChild(row);
-      });
+        document.body.appendChild(popup);
 
-      // ✅ Solo mostrar popup tras clic
-      mostrarPopup("✅ Lista de capturas actualizada correctamente.", "success");
-    } catch {
-      mostrarPopup("⚠️ Error al listar capturas.", "error");
+        popup.classList.add("show");
+        
+        const cerrar = () => {
+            popup.classList.remove("show");
+            popup.classList.add("cerrar");
+            setTimeout(() => popup.remove(), 300);
+        };
+        
+        document.getElementById("cerrarPopup").addEventListener("click", cerrar);
+
+        // Cierre automático después de 4 segundos
+        setTimeout(cerrar, 4000);
     }
-  }
 
-  // === POPUP MENSAJES ===
-  function mostrarPopup(mensaje, tipo) {
-    const popupExistente = document.querySelector(".popup-mensaje");
-    if (popupExistente) popupExistente.remove();
+    // --- REGISTRAR CAPTURA (POST /capturado) ---
+    formCaptura.addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-    const popup = document.createElement("div");
-    popup.className = `popup-mensaje ${tipo}`;
-    popup.innerHTML = `
-      <div class="popup-contenido">
-        <p>${mensaje}</p>
-        <button id="cerrarPopup">OK</button>
-      </div>
-    `;
-    document.body.appendChild(popup);
+        const usuarioCedula = document.getElementById("usuarioCedula").value.trim();
+        const pokemonId = document.getElementById("pokemonId").value.trim();
 
-    // Animación suave de aparición
-    popup.classList.add("show");
-    document.getElementById("cerrarPopup").addEventListener("click", () => {
-      popup.classList.remove("show");
-      setTimeout(() => popup.remove(), 10);
+        const captura = { usuarioCedula, pokemonId };
+
+        if (!captura.usuarioCedula || !captura.pokemonId) {
+            mostrarPopup("⚠️ Debes ingresar la Cédula del Usuario y el ID del Pokémon.", "error");
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/capturado`, { 
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(captura),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                mostrarPopup(data.mensaje || "✅ Captura registrada exitosamente.", "success"); 
+                formCaptura.reset();
+                listarCapturas(usuarioCedula);
+            } else {
+                mostrarPopup(data.mensaje || "❌ Error al registrar la captura. Revisa Cédula/ID.", "error"); 
+            }
+        } catch (error) {
+            console.error("Error en el registro:", error);
+            mostrarPopup("🚫 Error de conexión con el servidor. Asegúrate que el backend esté activo.", "error");
+        }
     });
-  }
 
-  // ❌ Eliminamos la llamada automática:
-  // listarCapturas();
+    // --- LISTAR CAPTURAS (GET /capturado/:usuarioCedula) ---
 
-  // === REDIRECCIÓN DEL LOGO AL INDEX PRINCIPAL ===
-  const logo = document.querySelector(".logo-form");
-  if (logo) {
-    logo.style.cursor = "pointer";
-    logo.addEventListener("click", () => {
-      window.location.href = "index.html"; // 🔹 Redirige al inicio
+    btnListar.addEventListener("click", () => {
+        const usuarioCedula = document.getElementById("usuarioCedula").value.trim();
+
+        if (usuarioCedula) {
+            listarCapturas(usuarioCedula);
+        } else {
+            mostrarPopup("ℹ️ Ingresa la Cédula del Usuario en el campo de registro para listar sus capturas.", "info");
+        }
     });
-  }
+
+    async function listarCapturas(cedula) {
+        tbody.innerHTML = ""; // Limpiar antes de solicitar
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/capturado/${cedula}`);
+            
+            if (!response.ok) throw new Error("Fallo al obtener la lista de capturas.");
+
+            const data = await response.json();
+
+            if (data.resultado && data.resultado.length > 0) {
+                 data.resultado.forEach((captura) => {
+                    const row = document.createElement("tr");
+                    
+                    // 🚨 CORRECCIÓN: Estructura de tabla limpia y correcta
+                    row.innerHTML = `
+                        <td>${captura.cedula}</td>
+                        <td>${captura.pokemonId} (${captura.nombrePokemon})</td> 
+                        <td>${captura.fechaCaptura}</td>
+                    `;
+                    
+                    tbody.appendChild(row);
+                });
+                mostrarPopup(`✅ ${data.resultado.length} capturas encontradas para Cédula: ${cedula}`, "success");
+            } else {
+                 mostrarPopup(`ℹ️ No se encontraron capturas para la Cédula: ${cedula}.`, "info");
+            }
+
+        } catch (error) {
+            console.error("Error al listar capturas:", error);
+            mostrarPopup("⚠️ Error al obtener la lista de capturas. Revisa la Cédula o el servidor.", "error");
+        }
+    }
+
+    // --- REDIRECCIÓN DEL LOGO ---
+    const logo = document.querySelector(".logo-form");
+    if (logo) {
+        logo.style.cursor = "pointer";
+        logo.addEventListener("click", () => {
+            window.location.href = "index.html"; 
+        });
+    }
 });

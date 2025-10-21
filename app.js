@@ -21,6 +21,8 @@ app.post('/pokemon', pokemonControlador.registrarPokemon);
 app.get('/pokemon', pokemonControlador.listarPokemones);
 app.post('/capturado', capturadoControlador.capturarPokemon);
 app.get('/capturado/:usuarioCedula', capturadoControlador.listarPokemonesUsuario);
+app.put('/usuario/:cedula', usuarioControlador.actualizarUsuario);
+app.delete('/usuario/:cedula', usuarioControlador.borrarUsuario);
 
 //archivos estaticos
 app.use(express.static('Frontend'));
