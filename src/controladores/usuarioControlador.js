@@ -1,8 +1,11 @@
 const Joi = require('joi');
-const { Usuario } = require('../baseDatos/index');
+// Importar Usuario desde index para asegurar que se use el objeto con las asociaciones
+const { Usuario } = require('../baseDatos'); 
+const { SequelizeUniqueConstraintError } = require('sequelize');
 
 
 const validadorRegistro = Joi.object({
+    // La cedula es Primary Key y debe ser única
     cedula: Joi.string().min(8).max(10).required().messages({
         'string.base': 'La cédula debe ser un texto.',
         'string.empty': 'La cédula es obligatoria.',
@@ -10,6 +13,7 @@ const validadorRegistro = Joi.object({
         'string.max': 'La cédula no puede tener más de {#limit} caracteres.',
         'any.required': 'La cédula es un campo obligatorio.'
     }),
+    // El email también es único
     email: Joi.string().email().required().messages({
         'string.base': 'El email debe ser un texto.',
         'string.empty': 'El email es obligatorio.',
@@ -53,14 +57,16 @@ const registrarUsuario = async (req, res) => {
 
         const { cedula, email, nombre, edad} = req.body;
         
-
+        // 1. Verificar si la cédula ya existe (Revisión antes de crear)
         const usuarioExistente = await Usuario.findByPk(cedula); 
         
         if (usuarioExistente) {
             return res.status(400).json({ mensaje: 'El usuario ya existe (Cédula duplicada)', resultado: null });
         }
 
+        // 2. Intentar crear el usuario
         const nuevoUsuario = await Usuario.create({ cedula, email, nombre, edad });
+        
         res.status(201).json(
         { 
             mensaje:'Usuario creado',
@@ -73,15 +79,23 @@ const registrarUsuario = async (req, res) => {
             }
         });
     } catch (error) {
-        // En caso de fallos de unicidad de email o edad no válida
-        res.status(400).json({ mensaje: error.message, resultado: null });
+        // 🚨 MANEJO DE ERROR DE UNICIDAD (EMAIL DUPLICADO) 🚨
+        if (error.name === 'SequelizeUniqueConstraintError') {
+            return res.status(400).json({ 
+                mensaje: "❌ Error de duplicidad: El Email ya se encuentra registrado.", 
+                resultado: null 
+            });
+        }
+        
+        console.error("Error al registrar usuario:", error);
+        res.status(500).json({ mensaje: "Error interno en el servidor.", resultado: null });
     }
 };
 
 const listarUsuarios = async (req, res) => {
     try {
         const usuarios = await Usuario.findAll({
-            order: [['nombre', 'ASC']] // Opcional: ordenar por nombre
+            order: [['nombre', 'ASC']]
         });
         res.status(200).json({ mensaje: 'Usuarios listados', resultado: usuarios });
     } catch (error) {
@@ -100,18 +114,15 @@ const actualizarUsuario = async (req, res) => {
             return res.status(404).json({ mensaje: 'Usuario no encontrado', resultado: null });
         }
 
-        // CORRECCIÓN CRÍTICA: Se debe pasar el objeto a actualizar y la cláusula WHERE.
-        // Sequelize update devuelve un array [número_de_filas_afectadas, filas_afectadas (solo en PostgreSQL)]
         const [filasAfectadas] = await Usuario.update(
             { email, nombre, edad },
-            { where: { cedula } } // <-- ESENCIAL: Solo actualizar el usuario con esa cédula
+            { where: { cedula } }
         );
 
         if (filasAfectadas === 0) {
             return res.status(200).json({ mensaje: 'No se realizaron cambios en el usuario', resultado: usuario });
         }
         
-        // Opcional: Buscar el usuario actualizado para devolver los datos completos
         const usuarioActualizado = await Usuario.findByPk(cedula);
         
         res.status(200).json({ mensaje: 'Usuario actualizado', resultado: usuarioActualizado });
@@ -129,9 +140,8 @@ const borrarUsuario = async (req, res) => {
             return res.status(404).json({ mensaje: 'Usuario no encontrado', resultado: null });
         }
         
-        // CORRECCIÓN CRÍTICA: Se debe pasar la cláusula WHERE para eliminar solo UN usuario.
         const filasEliminadas = await Usuario.destroy({
-            where: { cedula } // <-- ESENCIAL: Solo eliminar el usuario con esa cédula
+            where: { cedula }
         });
         
         if (filasEliminadas === 0) {
